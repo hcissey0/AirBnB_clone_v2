@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ """
 from tests.test_models.test_base_model import test_basemodel
+from models.base_model import BaseModel
 from models.user import User
 
 
@@ -32,3 +33,7 @@ class test_User(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.password), str)
+
+    def test_subclass(self):
+        """ """
+        self.assertTrue(issubclass(User, BaseModel))

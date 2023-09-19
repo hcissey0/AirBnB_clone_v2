@@ -2,6 +2,7 @@
 """ """
 from tests.test_models.test_base_model import test_basemodel
 from models.amenity import Amenity
+from models.base_model import BaseModel
 
 
 class test_Amenity(test_basemodel):
@@ -17,3 +18,7 @@ class test_Amenity(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.name), str)
+
+    def test_subclass(self):
+        """ """
+        self.assertTrue(issubclass(self.value, BaseModel))
