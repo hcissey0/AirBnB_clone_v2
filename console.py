@@ -16,7 +16,7 @@ class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
     # determines prompt for interactive/non-interactive modes
-    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
+    prompt = '(hbnb) '
 
     classes = {
                'BaseModel': BaseModel, 'User': User, 'Place': Place,
@@ -29,11 +29,6 @@ class HBNBCommand(cmd.Cmd):
              'max_guest': int, 'price_by_night': int,
              'latitude': float, 'longitude': float
             }
-
-    def preloop(self):
-        """Prints if isatty is false"""
-        if not sys.__stdin__.isatty():
-            print('(hbnb)')
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
@@ -86,12 +81,6 @@ class HBNBCommand(cmd.Cmd):
         finally:
             return line
 
-    def postcmd(self, stop, line):
-        """Prints if isatty is false"""
-        if not sys.__stdin__.isatty():
-            print('(hbnb) ', end='')
-        return stop
-
     def do_quit(self, command):
         """ Method to exit the HBNB console"""
         exit()
@@ -113,20 +102,37 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args: str):
+    def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        args = args.split(" ")
+        if not args[0]:
             print("** class name missing **")
             return
-        if args not in HBNBCommand.classes:
+        elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new = args.split(" ")
-        if new:
-            c_name = new[0]
-            c_dict = {i.split("=")[0]: i.split("=")[1] for i in new[1:]}
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
+        else:
+            dic = {}
+            for i in range(1, len(args)):
+                if "=" in args[i]:
+                    k, v = tuple(args[i].split("="))
+                    if v[0] == "\"":
+                        v = v.replace("_", " ").\
+                            replace("\\\"", "\"")[1:-1]
+                    elif "." in v:
+                        try:
+                            v = float(v)
+                        except ValueError:
+                            continue
+                    else:
+                        try:
+                            v = int(v)
+                        except ValueError:
+                            continue
+                    dic[k] = v
+        new_instance = HBNBCommand.classes[args[0]](**dic)
+        new_instance.save()
+        storage.new(new_instance)
         print(new_instance.id)
         storage.save()
 
@@ -203,21 +209,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
-
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            print([str(v) for k, v in storage.all().items()
+                   if k.split(".")[0] == args])
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+            print([str(v) for k, v in storage.all().items()])
 
     def help_all(self):
         """ Help information for the all command """
