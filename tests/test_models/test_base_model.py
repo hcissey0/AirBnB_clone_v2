@@ -214,7 +214,7 @@ class test_to_dict(unittest.TestCase):
         """_summary_
         """
         dic = {
-            "id": uuid.uuid4(),
+            "id": str(uuid.uuid4()),
             "__class__": "BaseModel",
             "updated_at": datetime.datetime.now().isoformat(),
             "created_at": datetime.datetime.now().isoformat(),

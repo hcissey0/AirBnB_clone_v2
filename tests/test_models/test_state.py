@@ -3,6 +3,8 @@
 from tests.test_models.test_base_model import test_basemodel
 from models.base_model import BaseModel
 from models.state import State
+from os import getenv
+import unittest
 
 
 class test_state(test_basemodel):
@@ -19,6 +21,7 @@ class test_state(test_basemodel):
         """
         self.assertTrue(issubclass(State, BaseModel))
 
+    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == "db", "Database")
     def test_name3(self):
         """ """
         new = self.value()

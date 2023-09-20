@@ -200,7 +200,7 @@ class test_console(unittest.TestCase):
             )
 
     def test_update_wrong_class(self):
-        """wrong class update"""    
+        """wrong class update"""
         with patch('sys.stdout', new=StringIO()) as t:
             self.cons.onecmd("update lksjdf")
             self.assertEqual(
