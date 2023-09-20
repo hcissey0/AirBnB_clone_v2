@@ -34,7 +34,7 @@ class DBStorage():
     def all(self, cls=None):
         """This is used to query from the data base"""
         objects = []
-        model_names = [State, City]
+        model_names = [State, City, User]
         if cls is None:
             for i in model_names:
                 if inspect(self.__engine).has_table(i.__tablename__):
