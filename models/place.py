@@ -26,5 +26,5 @@ class Place(BaseModel, Base):
         @property
         def reviews(self):
             """a getter attribute for reviews"""
-            return [i for i in models.storage.all(Review).values()
+            return [i for i in list(models.storage.all(Review).values())
                     if i.place_id == self.id]
