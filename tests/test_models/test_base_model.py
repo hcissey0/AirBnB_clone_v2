@@ -50,6 +50,7 @@ class test_basemodel(unittest.TestCase):
         with self.assertRaises(TypeError):
             new = BaseModel(**copy)
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == "db", "DATABASE")
     def test_save(self):
         """ Testing save """
         i = self.value()
@@ -111,6 +112,7 @@ class test_basemodel(unittest.TestCase):
         self.assertIsNotNone(BaseModel.save.__doc__)
         self.assertIsNotNone(BaseModel.to_dict.__doc__)
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == "db", "DATABASE")
     def test_updated_at(self):
         """ """
         new = self.value()

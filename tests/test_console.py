@@ -18,6 +18,7 @@ import json
 import console
 import pep8
 
+
 @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "DATABASE")
 class test_console(unittest.TestCase):
     """This is the test case for the console app"""

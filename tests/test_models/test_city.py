@@ -20,7 +20,7 @@ class test_City(test_basemodel):
         new = self.value()
         self.assertTrue(hasattr(new, "name"))
         self.assertTrue(hasattr(new, "state_id"))
-    
+
     def test_subclass(self):
         """_summary_
         """

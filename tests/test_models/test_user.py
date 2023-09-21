@@ -23,8 +23,6 @@ class test_User(test_basemodel):
         p = style.check_files(['models/user.py'])
         self.assertEqual(p.total_errors, 0, "fix wergpep8")
 
-    
-
     def test_attributeer(self):
         """chekcing if User have attributes"""
         self.assertTrue(hasattr(self.use, 'email'))
