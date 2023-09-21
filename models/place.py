@@ -3,9 +3,20 @@
 import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Table
 from models.review import Review
+from models.amenity import Amenity
 from sqlalchemy.orm import relationship
 from os import getenv
+
+
+association_table = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id"),
+                                 nullable=False, primary_key=True),
+                          Column("amenity_id", String(60),
+                                 ForeignKey("amenities.id"),
+                                 nullable=False, primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -23,9 +34,27 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
     amenity_ids = []
     reviews = relationship("Review", backref="place", cascade="all, delete")
+    amenities = relationship("Amenity", secondary="place_amenity",
+                             viewonly=False)
+
     if getenv("HBNB_TYPE_STORAGE") != 'db':
         @property
         def reviews(self):
             """a getter attribute for reviews"""
             return [i for i in list(models.storage.all(Review).values())
                     if i.place_id == self.id]
+
+        @property
+        def amenities(self):
+            """THis is the properties getter"""
+            amenities_list = []
+            for i in list(models.storage.all(Amenity).values()):
+                if i.id in self.amenity_ids:
+                    amenities_list.append(i)
+            return amenities_list
+
+        @property.setter
+        def amenities(self, value):
+            """This is the setter for amenities"""
+            if type(value) == Amenity:
+                self.amenity_ids.append(value.id)

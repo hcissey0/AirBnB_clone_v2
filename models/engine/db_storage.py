@@ -3,7 +3,7 @@
 
 from os import getenv
 from models.base_model import BaseModel, Base
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.city import City
 from models.amenity import Amenity
@@ -34,11 +34,10 @@ class DBStorage():
     def all(self, cls=None):
         """This is used to query from the data base"""
         objects = []
-        model_names = [State, City, User, Place]
+        model_names = [State, City, User, Place, Amenity, Review]
         if cls is None:
             for i in model_names:
-                if inspect(self.__engine).has_table(i.__tablename__):
-                    objects.extend(self.__session.query(i).all())
+                objects.extend(self.__session.query(i).all())
         else:
             if type(cls) == str:
                 try:
