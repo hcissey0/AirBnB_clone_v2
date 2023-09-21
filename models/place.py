@@ -53,7 +53,7 @@ class Place(BaseModel, Base):
                     amenities_list.append(i)
             return amenities_list
 
-        @property.setter
+        @amenities.setter
         def amenities(self, value):
             """This is the setter for amenities"""
             if type(value) == Amenity:

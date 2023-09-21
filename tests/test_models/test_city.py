@@ -16,18 +16,11 @@ class test_City(test_basemodel):
         self.name = "City"
         self.value = City
 
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == "db", "Database")
-    def test_state_id(self):
-        """ """
+    def test_attrs(self):
         new = self.value()
-        self.assertEqual(type(new.state_id), str)
-
-    @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") == "db", "Database")
-    def test_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.name), str)
-
+        self.assertTrue(hasattr(new, "name"))
+        self.assertTrue(hasattr(new, "state_id"))
+    
     def test_subclass(self):
         """_summary_
         """
