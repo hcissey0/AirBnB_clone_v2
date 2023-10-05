@@ -7,6 +7,8 @@ then
 	echo "nginx installed"
 else
 	echo "nginx not install"
+	sudo apt-get update -y
+	sudo apt-get install -y nginx
 fi
 
 dataf="/data/"
