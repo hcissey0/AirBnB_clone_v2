@@ -37,7 +37,13 @@ done
 # add hello world to the index.html file
 index="/data/web_static/releases/test/index.html"
 sudo touch $index
-echo "Holberton School" | sudo tee $index
+echo "<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>" | sudo tee $index
 
 # now create a symbolic link
 sudo ln -sf "$testf" "/data/web_static/current"
