@@ -11,28 +11,8 @@ else
 	sudo apt-get install -y nginx
 fi
 
-dataf="/data/"
-web_staticf="/data/web_static/"
-releasesf="/data/web_static/releases/"
-sharedf="/data/web_static/shared/"
-testf="/data/web_static/releases/test/"
-
-# create array of folders
-folders=("$dataf" "$web_staticf" "$releasesf" "$sharedf" "$testf")
-
-# loop through and check if not available then create
-for folder in "${folders[@]}";
-do
-	if [ -d "$folder" ];
-	then
-		echo "The folder $folder exists"
-	else
-		echo "The folder $folder does not exist"
-		echo "Creating the $folder folder"
-		sudo mkdir -p "$folder"
-		echo "$folder created successfully"
-	fi
-done
+sudo mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared
 
 # add hello world to the index.html file
 index="/data/web_static/releases/test/index.html"
@@ -43,10 +23,10 @@ echo "<html>
   <body>
     Holberton School
   </body>
-</html>" | sudo tee $index
+</html>" | sudo tee /data/web_static/releases/test/index.html
 
 # now create a symbolic link
-sudo ln -sf "$testf" "/data/web_static/current"
+sudo ln -sf /data/web_static/releases/test /data/web_static/current
 
 # giving ownership of /data folder to ubuntu user
 sudo chown -R ubuntu:ubuntu /data/
