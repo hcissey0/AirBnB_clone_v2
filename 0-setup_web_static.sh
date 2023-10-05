@@ -2,14 +2,8 @@
 # This script is used to set up the airbnb clone static page
 
 # check if nginx is installed
-if which nginx > /dev/null 2>&1;
-then
-	echo "nginx installed"
-else
-	echo "nginx not install"
-	sudo apt-get update -y
-	sudo apt-get install -y nginx
-fi
+sudo apt-get update -y
+sudo apt-get install -y nginx
 
 sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared
