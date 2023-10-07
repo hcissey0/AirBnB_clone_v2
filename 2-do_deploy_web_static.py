@@ -21,6 +21,11 @@ def do_deploy(archive_path):
         if put(archive_path, "/tmp/").failed:
             return False
 
+        # removing old folder if available
+        if run("rm -fr /data/web_static/releases/{}".format(
+                name)).failed:
+            return False
+
         # creating new folder
         if run("mkdir -p /data/web_static/releases/{}/".format(
                 name)).failed:
@@ -41,7 +46,7 @@ def do_deploy(archive_path):
             return False
 
         # deleting the uncompressed folder
-        if run("rm -fr /data/web_static/releases/{}/web_static".format(
+        if run("rm -fr /data/web_static/releases/{}/web_static/".format(
                 name)).failed:
             return False
 
