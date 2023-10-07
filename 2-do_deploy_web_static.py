@@ -18,32 +18,42 @@ def do_deploy(archive_path):
     name = file_name.split(".")[0]
     try:
         # uploading to the temp folder
-        put(archive_path, "/tmp/")
+        if put(archive_path, "/tmp/").failed:
+            return False
 
         # creating new folder
-        run("mkdir -p /data/web_static/releases/{}/".format(name))
+        if run("mkdir -p /data/web_static/releases/{}/".format(
+                name)).failed:
+            return False
 
         # extracting to the folder
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
-            file_name, name))
+        if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
+                file_name, name)).failed:
+            return False
 
         # deleting the archive
-        run("rm /tmp/{}".format(file_name))
+        if run("rm /tmp/{}".format(file_name)).failed:
+            return False
 
         # copying the data to the uncompressed parent folder
-        run("mv /data/web_static/releases/{}/web_static/* "
-            "/data/web_static/releases/{}/".format(name, name))
+        if run("mv /data/web_static/releases/{}/web_static/* "
+               "/data/web_static/releases/{}/".format(name, name)).failed:
+            return False
 
         # deleting the uncompressed folder
-        run("rm -fr /data/web_static/releases/{}/web_static".format(
-            name))
+        if run("rm -fr /data/web_static/releases/{}/web_static".format(
+                name)).failed:
+            return False
 
         # removing the old symbolic link
-        run("rm -rf /data/web_static/current")
+        if run("rm -rf /data/web_static/current").failed:
+            return False
 
         # creating a new symbolic link
-        run("ln -s /data/web_static/releases/{}/ "
-            "/data/web_static/current".format(name))
+        if run("ln -s /data/web_static/releases/{}/ "
+               "/data/web_static/current".format(name)).failed:
+            return False
+
         return True
     except Exception:
         return False
