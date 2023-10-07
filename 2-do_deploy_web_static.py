@@ -20,9 +20,6 @@ def do_deploy(archive_path):
         # uploading to the temp folder
         put(archive_path, "/tmp/")
 
-        # remove old folder
-        run("rm -fr /data/web_static/releases/{}/".format(name))
-
         # creating new folder
         run("mkdir -p /data/web_static/releases/{}/".format(name))
 
