@@ -3,7 +3,7 @@
 
 import os
 from datetime import datetime
-from fabric.api import local, env, put
+from fabric.api import local, env, put, run
 
 
 def do_pack():
