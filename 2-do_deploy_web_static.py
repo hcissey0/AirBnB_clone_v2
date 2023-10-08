@@ -19,6 +19,8 @@ def do_deploy(archive_path):
     try:
         # uploading to the temp folder
         put(archive_path, "/tmp/")
+        run("rm -fr /data/web_static/releases/{}".format(
+            name))
 
         # creating new folder
         if run("mkdir -p /data/web_static/releases/{}/".format(
