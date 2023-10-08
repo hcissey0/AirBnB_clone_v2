@@ -18,13 +18,7 @@ def do_deploy(archive_path):
     name = file_name.split(".")[0]
     try:
         # uploading to the temp folder
-        if put(archive_path, "/tmp/").failed:
-            return False
-
-        # removing old folder if available
-        if run("rm -fr /data/web_static/releases/{}".format(
-                name)).failed:
-            return False
+        put(archive_path, "/tmp/")
 
         # creating new folder
         if run("mkdir -p /data/web_static/releases/{}/".format(
@@ -59,6 +53,7 @@ def do_deploy(archive_path):
                "/data/web_static/current".format(name)).failed:
             return False
 
-        return True
     except Exception:
         return False
+    print("New version deployed!")
+    return True
