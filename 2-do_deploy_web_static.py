@@ -7,6 +7,8 @@ from fabric.api import env, put, run
 
 
 env.hosts = ["54.160.68.240", "34.232.71.122"]
+env.user = 'ubuntu'
+env.key_filename = '~/.ssh/id_rsa'
 
 
 def do_deploy(archive_path):
@@ -19,6 +21,8 @@ def do_deploy(archive_path):
     try:
         # uploading to the temp folder
         put(archive_path, "/tmp/")
+
+        # delete existing folder
         run("rm -fr /data/web_static/releases/{}".format(
             name))
 
