@@ -20,60 +20,77 @@ $config_nginx = "server {
     }
 }"
 
-# Ensure package manager is up to date
-exec { 'apt_update':
-  command => '/usr/bin/apt-get update',
-}
-
-# Ensure nginx is installed
-package { 'nginx':
-  ensure  => installed,
-  require => Exec['apt_update'],
-}
-
-# Ensure the directories exists
-file { ['/data/web_static/releases/test', '/data/web_static/shared']:
-  ensure => 'directory',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-}
-
-# Ensure index.html exists correctly
-file { '/data/web_static/releases/test/index.html':
-  ensure  => 'present',
-  content => '
-<html>
+$index_cont = "<html>
   <head>
   </head>
   <body>
     Holberton School
-  </body>
-</html>',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
+  </body
+</html>"
+
+
+package { 'nginx':
+  ensure   => 'present',
+  provider => 'apt'
 }
 
-# Ensure symbolic links exists
-file { '/data/web_static/current':
+-> file { '/data':
+  ensure  => 'directory'
+}
+
+-> file { '/data/web_static':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases/test':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/shared':
+ensure => 'directory'
+  }
+
+-> file { '/data/web_static/releases/test/index.html':
+  ensure  => 'present',
+  content => $index_cont
+}
+
+-> file { '/data/web_static/current':
   ensure => 'link',
-  target => '/data/web_static/releases/test',
+  target => '/data/web_static/releases/test'
 }
 
-# Ensure error page present
-file { '/var/www/html/custom_404.html':
+-> exec { 'chown -R ubuntu:ubuntu /data/':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
+}
+
+file { '/var/www':
+  ensure => 'directory'
+}
+
+-> file { '/var/www/html':
+  ensure => 'directory'
+}
+
+-> file { '/var/www/html/index.html':
   ensure  => 'present',
-  content => "Ceci n'est pas une page",
+  content => $index_cont
 }
 
-# Ensure nginx config is ok
-file { '/etc/nginx/sites-available/default':
+-> file { '/var/www/html/404.html':
   ensure  => 'present',
-  content => $config_nginx,
+  content => "Ceci n'est pas une page"
 }
 
-# ensure nginx is running
-service { 'nginx':
-  ensure     => 'running',
-  enable     => true,
-  hasrestart => true,
+-> file { '/etc/nginx/sites-available/default':
+  ensure  => 'present',
+  content => $config_nginx
+}
+
+-> exec { 'nginx restart':
+  path => '/etc/init.d/'
 }

@@ -13,7 +13,7 @@ def do_clean(number=0):
     """This is the fabric clean up function"""
     number = 1 if int(number) == 0 else int(number)
 
-    archives_list = os.listdir("versions").sort()
+    archives_list = sorted(os.listdir("versions"))
     [archives_list.pop() for i in range(number)]
     with lcd("versions"):
         [local("rm ./{}".format(i)) for i in archives_list]
