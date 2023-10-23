@@ -9,14 +9,14 @@ from models.amenity import Amenity
 from sqlalchemy.orm import relationship
 from os import getenv
 
-
-association_table = Table("place_amenity", Base.metadata,
-                          Column("place_id", String(60),
-                                 ForeignKey("places.id"),
-                                 nullable=False, primary_key=True),
-                          Column("amenity_id", String(60),
-                                 ForeignKey("amenities.id"),
-                                 nullable=False, primary_key=True))
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    place_amenity =  Table("place_amenity", Base.metadata,
+                           Column("place_id", String(60),
+                                  ForeignKey("places.id"),
+                                  nullable=False, primary_key=True),
+                           Column("amenity_id", String(60),
+                                  ForeignKey("amenities.id"),
+                                  nullable=False, primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -33,9 +33,9 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
-    reviews = relationship("Review", backref="place", cascade="all, delete")
+    reviews = relationship("Review", backref="places", cascade="all, delete")
     amenities = relationship("Amenity", secondary="place_amenity",
-                             viewonly=False)
+                             viewonly=False, backref="place_amenities")
 
     if getenv("HBNB_TYPE_STORAGE") != 'db':
         @property
@@ -49,7 +49,7 @@ class Place(BaseModel, Base):
             """THis is the properties getter"""
             amenities_list = []
             for i in list(models.storage.all(Amenity).values()):
-                if i.id in self.amenity_ids:
+                if i.place_id == self.id:
                     amenities_list.append(i)
             return amenities_list
 

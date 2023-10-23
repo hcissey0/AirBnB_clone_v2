@@ -35,6 +35,13 @@ class DBStorage():
         """This is used to query from the data base"""
         objects = []
         model_names = [State, City, User, Place, Amenity, Review]
+        str_model_names = {'State': State,
+                           'City': City,
+                           'User': User,
+                           'Place': Place,
+                           'Amenity': Amenity,
+                           'Review': Review
+                           }
         if cls is None:
             for i in model_names:
                 objects.extend(self.__session.query(i).all())
@@ -62,11 +69,10 @@ class DBStorage():
 
     def reload(self):
         """refreshes the database"""
-        Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
-        Session = scoped_session(session_factory)
-        self.__session = Session()
+        Base.metadata.create_all(self.__engine)
+        self.__session = scoped_session(session_factory)
 
     def close(self):
         """This is the close method"""
